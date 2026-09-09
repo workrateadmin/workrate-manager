@@ -1,0 +1,62 @@
+WORKRATE PRODUCTION — SWITCH ORIGINAL PROJECT TO PRODUCTION STORAGE ONLY
+
+LOW-USAGE, PRODUCTION-RECOVERY TASK.
+
+CURRENT VERIFIED STATE:
+- This ORIGINAL WorkRate project is now intended to be production-only.
+- Separate WorkRate Staging project now exists with its own isolated DB and App Storage.
+- Production startup has previously failed because Replit injected the old workspace/dev App Storage bucket.
+- Approved production App Storage bucket:
+  repl-default-bucket-38a3dfb4-3859-4ed5-837e-20715c304142
+- Approved production bucket fingerprint:
+  e3a50e5234b4
+- Production startup gate must remain enabled and fail-closed.
+- Do NOT weaken or bypass environment/resource safety checks.
+
+GOAL:
+Make this ORIGINAL project production-only by setting its project-level/default App Storage binding to the approved production bucket, then verify the configuration is internally consistent.
+
+DO NOT:
+- touch the separate WorkRate Staging project
+- copy development data to production
+- run destructive database operations
+- weaken the startup gate
+- change ports
+- move app.listen earlier
+- publish yet
+- change application logic
+- alter production customer data
+- alter production DB contents
+- configure new providers
+
+STEPS:
+
+1. Inspect the current .replit / project-level object storage configuration.
+
+2. Set the ORIGINAL project’s active/default App Storage bucket to exactly:
+   repl-default-bucket-38a3dfb4-3859-4ed5-837e-20715c304142
+
+3. Confirm the expected production storage fingerprint remains exactly:
+   e3a50e5234b4
+
+4. Confirm:
+   - WORKRATE_ENV is production for production deployment
+   - production DB configuration is unchanged
+   - production DB marker is not modified
+   - production storage marker is not modified
+   - startup resource gate remains enabled
+   - no development/staging bucket remains active as this project’s default storage
+
+5. Do NOT publish.
+
+REPORT ONLY:
+
+- ACTIVE DEFAULT BUCKET ID
+- EXPECTED PRODUCTION FINGERPRINT
+- OLD DEV BUCKET STILL ACTIVE AS DEFAULT: YES/NO
+- PRODUCTION DB CHANGED: YES/NO
+- STARTUP RESOURCE GATE CHANGED: YES/NO
+- APPLICATION CODE CHANGED: YES/NO
+- SAFE FOR ONE CONTROLLED PRODUCTION PUBLISH: YES/NO
+
+Stop.

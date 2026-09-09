@@ -39,4 +39,4 @@ WORKRATE_ENV = "development"
 WORKRATE_STORAGE_ENV = "development"
 
 [objectStorage]
-defaultBucketID = "replit-objstore-fc3ca7d9-86c2-4ebd-841a-5791efa5879e"
+defaultBucketID = "repl-default-bucket-38a3dfb4-3859-4ed5-837e-20715c304142"

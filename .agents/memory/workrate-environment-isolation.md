@@ -32,3 +32,9 @@ Application release identity is derived from Git history over an explicit deploy
 **Why:** Storing `WORKRATE_BUILD_ID` in version-controlled `.replit` created a self-reference cycle where aligning the value generated a new metadata commit and therefore another apparent ID.
 
 **How to apply:** Resolve and embed the newest clean commit affecting application/build inputs. Fail closed if Git is unavailable, malformed, or deployable paths are dirty. A configured `WORKRATE_BUILD_ID` may confirm the embedded ID but may never override it. Exclude docs, attachments, agent memory, and `.replit` from application identity.
+
+The original WorkRate project is production-only; development and staging resources belong in the separate staging project.
+
+**Why:** Replit binds the project-level default App Storage bucket into Autoscale runtimes, so keeping development storage attached to the production project caused the production startup gate to reject the deployment.
+
+**How to apply:** Keep this project’s default storage attachment on the approved production bucket. Never reconnect its former development bucket or copy production data, secrets, or markers into staging.
