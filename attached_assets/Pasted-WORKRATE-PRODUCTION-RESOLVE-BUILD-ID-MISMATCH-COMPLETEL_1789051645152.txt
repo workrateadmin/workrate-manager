@@ -1,0 +1,70 @@
+WORKRATE PRODUCTION — RESOLVE BUILD_ID_MISMATCH COMPLETELY
+
+LOW-USAGE. FIX THIS ONE BLOCKER ONLY.
+
+LATEST FAILED BUILD:
+ae1dac1b-647d-45e9-9c39-1624f13a9bf6
+
+PROVEN FAILURE:
+verificationPhase: build
+status: FAIL
+code: BUILD_ID_MISMATCH
+buildId: null
+message:
+"The configured build ID conflicts with the immutable application source ID."
+
+The build fails inside:
+artifacts/api-server/src/scripts/verify-release-storage.ts
+
+GOAL:
+Find exactly why BUILD_ID_MISMATCH is still being raised and permanently resolve the stale/manual build-ID dependency.
+
+DO NOT:
+- touch database
+- touch App Storage binding or markers
+- change ports
+- change Stripe/HMRC/Vapi/Meta
+- change customer data
+- weaken environment/storage/database safety gates
+- publish
+
+FIRST DETERMINE:
+
+1. The current derived immutable deployable source ID.
+2. Every place WORKRATE_BUILD_ID is currently read or configured.
+3. Whether production build verification still requires WORKRATE_BUILD_ID.
+4. Why the verifier reports buildId: null while returning BUILD_ID_MISMATCH.
+
+THEN APPLY ONLY THE MINIMUM FIX:
+
+- The DERIVED immutable source ID must be authoritative.
+- A legitimate committed source change must NOT require manually updating WORKRATE_BUILD_ID.
+- WORKRATE_BUILD_ID must not override or conflict with the derived source ID.
+- Preserve clean-tree/source-identity protection.
+- Preserve all runtime production resource gates.
+
+After fixing, run exactly the same production release verification that failed:
+
+pnpm --filter @workspace/scripts run verify:release-storage
+
+It MUST return PASS before stopping.
+
+Also run API typecheck/build and relevant source-identity tests.
+
+REPORT ONLY:
+
+- ROOT CAUSE:
+- CURRENT DERIVED SOURCE ID:
+- STALE/MANUAL BUILD ID FOUND AT:
+- FILES/CONFIG CHANGED:
+- MANUAL WORKRATE_BUILD_ID STILL REQUIRED: YES/NO
+- IMMUTABLE SOURCE VALIDATION STILL ACTIVE: YES/NO
+- RESOURCE SAFETY GATES STILL ACTIVE: YES/NO
+- RELEASE VERIFICATION: PASS/FAIL
+- TYPECHECK/BUILD: PASS/FAIL
+- TESTS: PASS/FAIL
+- SAFE TO PUBLISH: YES/NO
+
+DO NOT PUBLISH.
+
+Stop.
