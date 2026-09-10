@@ -1,0 +1,117 @@
+We are working ONLY in the OLD original WorkRate project.
+
+This is a READ-ONLY investigation.
+
+## Known facts
+
+The actually accessible legacy bucket is:
+
+`replit-objstore-fc3ca7d9-86c2-4ebd-841a-5791efa5879e`
+
+Fingerprint:
+
+`6c3db9401c73`
+
+Its existing marker says:
+
+`schemaVersion: 1`
+`environment: development`
+`bucketFingerprint: 6c3db9401c73`
+
+It contains:
+
+* 26 objects
+* approximately 19,018,611 bytes
+* `.private: 24`
+* `.workrate: 1`
+* `public: 1`
+
+The bucket historically configured as production:
+
+`repl-default-bucket-38a3dfb4-3859-4ed5-837e-20715c304142`
+
+is not accessible and previously returned 404.
+
+We must NOT assume the accessible bucket is safe to migrate merely because it contains historical files.
+
+## Task
+
+Determine whether the REAL WorkRate production database actually references objects stored in:
+
+`replit-objstore-fc3ca7d9-86c2-4ebd-841a-5791efa5879e`
+
+### Step 1 — verify database identity
+
+Using a plain read-only query through the existing database connection, read `_workrate_environment`.
+
+Do not initialize or modify it.
+
+If the database marker is NOT exactly:
+
+`production`
+
+STOP immediately and report that.
+
+### Step 2 — inspect source/schema
+
+Inspect existing WorkRate source/schema to identify the tables/columns that store App Storage object paths, upload keys, file URLs, attachment references, receipt/document references, or other object-storage identifiers.
+
+Do not make code changes.
+
+### Step 3 — read-only correlation
+
+List metadata/object names from the accessible legacy bucket internally.
+
+Then perform read-only database queries to determine whether production database records reference those existing bucket objects.
+
+Do not print object keys, customer names, file names containing identifying information, URLs containing tokens, or database record contents.
+
+Compare internally and report aggregate counts only.
+
+Where possible report:
+
+* distinct storage object references found in the production DB
+* how many match objects in the accessible legacy bucket
+* how many production DB references are missing from that bucket
+* how many bucket objects appear unreferenced by the production DB
+* which WorkRate feature/table categories reference matching objects, using generic categories only
+* whether the evidence shows this bucket was actually being used by the production application
+
+Do not download object contents.
+
+## Hard restrictions
+
+Do NOT:
+
+* INSERT, UPDATE or DELETE database rows
+* create or initialize markers
+* run migrations
+* run Drizzle push
+* seed anything
+* upload/copy/delete/move storage objects
+* change bucket/environment configuration
+* modify source or `.replit`
+* publish/start WorkRate
+* touch staging
+* touch the NEW WorkRate Production project
+* reveal `DATABASE_URL`
+* reveal customer data or identifying object names
+
+## Report back ONLY
+
+* DATABASE CONNECTION = reachable / not reachable
+* DATABASE MARKER =
+* EXPECTED DATABASE MARKER = production
+* STORAGE OBJECTS = 26
+* DISTINCT PRODUCTION DB STORAGE REFERENCES =
+* MATCHING REFERENCES TO LEGACY BUCKET =
+* PRODUCTION REFERENCES MISSING FROM LEGACY BUCKET =
+* LEGACY BUCKET OBJECTS UNREFERENCED BY PRODUCTION DB =
+* MATCHING FEATURE/TABLE CATEGORIES =
+* LEGACY BUCKET USED BY PRODUCTION = YES / NO / INCONCLUSIVE
+* EXPLANATION = one short sanitized explanation
+* ERROR = NONE or sanitized error
+
+STOP after this investigation.
+
+Do not copy any files.
