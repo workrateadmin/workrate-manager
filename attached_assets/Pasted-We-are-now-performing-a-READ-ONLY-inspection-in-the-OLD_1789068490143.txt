@@ -1,0 +1,70 @@
+We are now performing a READ-ONLY inspection in the OLD original WorkRate project.
+
+Do not modify any files, storage objects, source code, environment variables, `.replit`, database, or deployment.
+
+## Known storage problem
+
+`.replit` historically referenced:
+
+`repl-default-bucket-38a3dfb4-3859-4ed5-837e-20715c304142`
+
+But the actual bucket injected into this project's runtime/workspace was previously confirmed as:
+
+`replit-objstore-fc3ca7d9-86c2-4ebd-841a-5791efa5879e`
+
+Explicit access to the configured `repl-default-bucket-38a3dfb4-3859-4ed5-837e-20715c304142` returned:
+
+`404: The specified bucket does not exist`
+
+We need to determine whether the ACTUALLY ACCESSIBLE injected bucket contains the real historical WorkRate production files.
+
+## Task
+
+Using the existing WorkRate object-storage client and existing read-only helpers only:
+
+1. Confirm the bucket ID actually injected/accessed by this OLD project.
+2. Calculate/report its existing WorkRate storage fingerprint.
+3. Read the existing storage environment marker if one exists.
+
+   * Do NOT initialize or change it.
+4. Perform a READ-ONLY inventory of objects in the accessible bucket.
+5. Report:
+
+   * total object count
+   * approximate total stored bytes if available without downloading objects
+   * object counts grouped by top-level area/prefix such as `private`, `public`, marker/config paths, or other existing top-level prefixes
+   * whether there are clearly existing historical WorkRate uploaded files/assets
+6. Do NOT print file contents.
+7. Do NOT print customer names, customer data, tokens, credentials, or other sensitive contents.
+8. Do NOT download/copy objects.
+
+If object keys themselves contain customer-identifying information, sanitize them and report only prefix/category counts.
+
+## Hard restrictions
+
+Do NOT:
+
+* write/upload/delete/copy/move any storage object
+* initialize a storage marker
+* change bucket bindings
+* change fingerprints
+* change environment variables
+* access or modify the database
+* start/publish WorkRate
+* modify source
+* touch the NEW WorkRate Production project
+* touch staging
+
+## Report back ONLY
+
+* ACTUAL ACCESSIBLE BUCKET ID =
+* ACTUAL FINGERPRINT =
+* STORAGE MARKER =
+* TOTAL OBJECT COUNT =
+* APPROX TOTAL BYTES =
+* TOP-LEVEL PREFIX COUNTS =
+* HISTORICAL WORKRATE FILES PRESENT = YES / NO / UNCLEAR
+* CONFIGURED OLD BUCKET ACCESSIBLE = YES / NO
+* ERROR = NONE or sanitized error
+
+STOP after the read-only inventory.
