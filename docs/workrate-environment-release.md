@@ -3,8 +3,10 @@
 WorkRate has three deliberately separate deployments and databases: `development`,
 `staging`, and `production`. Set `WORKRATE_ENV` exactly to one of those values in
 each deployment. Set `WORKRATE_BUILD_ID` to the immutable source commit/build
-identifier in staging and production; record that same value in the release
-notes and rollback decision. Development may use `local-development`.
+identifier in staging and production; the build derives this identity from the
+clean deployable Git history. `WORKRATE_BUILD_ID` may be retained as optional
+metadata, but it is never authoritative and cannot override the derived source
+identity. Development may use `local-development`.
 
 ## First use and DB markers
 
@@ -34,8 +36,9 @@ step. A failed validation exits non-zero and blocks that publish.
    independently approved fingerprint recorded when the staging bucket was
    provisioned, then run `pnpm verify:release-storage`. Never generate or replace
    this pin from the deployment's currently configured bucket during release.
-3. Publish a staging build with a new exact `WORKRATE_BUILD_ID`. Replit generates
-   the staging publish URL first; exercise it before adding/changing DNS.
+3. Publish a staging build from the clean deployable source. The build derives
+   its immutable source ID automatically. Replit generates the staging publish
+   URL first; exercise it before adding/changing DNS.
 4. Use Replit's Publish schema-diff/promotion UI to promote the reviewed schema
    to staging/production. Do not run `db push`, embedded migrations, or any
    startup DDL in staging or production. Their startup migrations are disabled.

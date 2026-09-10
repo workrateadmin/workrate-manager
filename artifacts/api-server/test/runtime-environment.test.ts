@@ -442,7 +442,7 @@ test("deployable source path set is explicit and excludes release metadata", () 
   ]);
 });
 
-test("configured build ID must match the derived immutable source identity", async () => {
+test("derived immutable source identity is authoritative over configured build ID", async () => {
   const production = releaseEnvironment("production");
   const sourceId = "d".repeat(40);
   assert.equal(
@@ -458,8 +458,16 @@ test("configured build ID must match the derived immutable source identity", asy
       production,
       () => new Date(),
       sourceId,
-    )).code,
-    "BUILD_ID_MISMATCH",
+    )).status,
+    "pass",
+  );
+  assert.equal(
+    (await validateReleaseBuildConfiguration(
+      production,
+      () => new Date(),
+      sourceId,
+    )).buildId,
+    sourceId,
   );
 });
 

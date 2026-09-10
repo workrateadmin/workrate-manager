@@ -25,7 +25,7 @@ WorkRate helps trade businesses manage enquiries, quotes, jobs, invoices, and fi
 ## Release environments
 
 - Use separate development, staging, and production databases and secrets.
-- Set exact `WORKRATE_ENV`; staging/production also require an immutable `WORKRATE_BUILD_ID`.
+- Set exact `WORKRATE_ENV`; staging/production derive their immutable build ID from deployable source at build time. `WORKRATE_BUILD_ID` is optional metadata and never overrides that source identity.
 - Initialize the matching DB marker before startup. Staging and production never run startup migrations; use Replit Publish schema promotion.
 - The generated staging publish URL is tested before DNS. See `docs/workrate-environment-release.md` for the full DEV → STAGING → PRODUCTION, Clerk interim model, fixture, and rollback runbook.
 
