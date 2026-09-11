@@ -1,0 +1,106 @@
+{
+  "objectCount": 25,
+  "totalBytes": 19018529,
+  "objects": [
+    {
+      "path": ".private/finance/c7b3be4a-465b-4b11-a65b-bcd818d34e05.pdf",
+      "size": 655
+    },
+    {
+      "path": ".private/finance/f7852797-b90d-4c56-b48c-abca4db46ef4.png",
+      "size": 807334
+    },
+    {
+      "path": ".private/uploads/110843b7-daf7-48b5-b7ff-10521392dcad.png",
+      "size": 144285
+    },
+    {
+      "path": ".private/uploads/13ecb6df-279b-4da5-94c5-580907f017dc.png",
+      "size": 1359575
+    },
+    {
+      "path": ".private/uploads/1bcb81fb-8709-4c85-a454-434c22eb89f6.jpg",
+      "size": 152
+    },
+    {
+      "path": ".private/uploads/1d6726f5-aeea-477a-bbb3-074657179a8e.png",
+      "size": 1831112
+    },
+    {
+      "path": ".private/uploads/28f7dc32-2318-4f29-aa26-322fbc0a44c1.jpg",
+      "size": 335
+    },
+    {
+      "path": ".private/uploads/33c4d94e-322e-476a-ab29-9dda7021d69c.jpg",
+      "size": 2775033
+    },
+    {
+      "path": ".private/uploads/36f1dbab-374b-4640-a29e-b4c4edcb13d8.pdf",
+      "size": 40
+    },
+    {
+      "path": ".private/uploads/39ef7940-737a-45ad-8506-72c919a0f4ef.jpg",
+      "size": 1380666
+    },
+    {
+      "path": ".private/uploads/599967b9-faea-4d88-9a56-4475a0e488a1.png",
+      "size": 1358904
+    },
+    {
+      "path": ".private/uploads/6421434d-45f3-4480-9ff1-6b894f1d8744.png",
+      "size": 68
+    },
+    {
+      "path": ".private/uploads/6c4e7948-19c1-4e04-99cb-2ae434c6650c.png",
+      "size": 1383141
+    },
+    {
+      "path": ".private/uploads/92e762b3-65c5-4d95-89de-0a02a18c1fd9.jpg",
+      "size": 5479023
+    },
+    {
+      "path": ".private/uploads/94585693-37a7-47c4-b47f-9dd3efc84327.jpg",
+      "size": 22
+    },
+    {
+      "path": ".private/uploads/968aa70e-ee66-4c28-a1a6-8affc3a5e277.png",
+      "size": 263221
+    },
+    {
+      "path": ".private/uploads/a3b13f30-aa5a-4220-9b70-c1583b7deb46.png",
+      "size": 144285
+    },
+    {
+      "path": ".private/uploads/ae3b2c68-6ba0-4208-bbd4-c1bf7386597f.webp",
+      "size": 5854
+    },
+    {
+      "path": ".private/uploads/c2a6b542-51cc-41ee-99be-9ca9d546827a.png",
+      "size": 263221
+    },
+    {
+      "path": ".private/uploads/d7209d66-3e6b-4757-9689-32f092ac7259.png",
+      "size": 207051
+    },
+    {
+      "path": ".private/uploads/de8570f2-d314-44d4-a6fb-5c1e2eb8527c.webp",
+      "size": 5854
+    },
+    {
+      "path": ".private/uploads/df01072f-e5cc-41bf-9600-15482456c2d2.png",
+      "size": 207051
+    },
+    {
+      "path": ".private/uploads/f351bc3c-3dd9-4aa2-985d-4f8ca7b682ab.webp",
+      "size": 5854
+    },
+    {
+      "path": ".private/uploads/ffb05514-5920-4efc-b468-a382f700fbb1.png",
+      "size": 1395793
+    },
+    {
+      "path": "public/",
+      "size": 0
+    }
+  ]
+}

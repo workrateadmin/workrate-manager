@@ -28,3 +28,31 @@ mtime_ms = 1788869920981
 storage_uri = "gcs://replit-rams-assets-kirk/rams/assets/repl:38a3dfb4-3859-4ed5-837e-20715c304142/59d6f558-36fd-47f3-8f83-d5523ca2fc4c/cb869f73-f229-4f89-bebd-677b95e883fb"
 storage_version_token = "1788869925996318"
 content_type = "application/octet-stream"
+
+[[outputs]]
+id = "rGCkyJv1Ypvvv6TpF4b9P"
+uri = "file://workrate-production-storage-export.tar.gz"
+type = "unspecified"
+title = "WorkRate production storage export"
+description = "Verified archive containing 25 non-marker legacy bucket objects with exact relative object paths."
+logical_id = "de956d84-9a86-43bd-bf7d-6dbb7e0afde4"
+content_hash = "sha256:0e9c70e23bcec75c5b5d6fe5b29fc614ccf5b3eef437f473b4744306ec5541f2"
+size = 18537616
+mtime_ms = 1789110988419
+storage_uri = "gcs://replit-rams-assets-kirk/rams/assets/repl:38a3dfb4-3859-4ed5-837e-20715c304142/de956d84-9a86-43bd-bf7d-6dbb7e0afde4/cf689b5d-a3ec-44a8-ad11-1ed77495650a"
+storage_version_token = "1789110997056190"
+content_type = "application/octet-stream"
+
+[[outputs]]
+id = "pnJAWpCH80fdoBUGF4lwh"
+uri = "file://workrate-production-storage-export-manifest.json"
+type = "unspecified"
+title = "WorkRate production storage export manifest"
+description = "Verified manifest containing object count, total bytes, relative paths, and per-object sizes only."
+logical_id = "f12c93fd-ea66-43d3-8c61-7bbadf58f72d"
+content_hash = "sha256:0fb2f3209c183919eaab89af11c82bd30b4f46f58640dca5f4cda484a7df3e65"
+size = 2723
+mtime_ms = 1789110988426
+storage_uri = "gcs://replit-rams-assets-kirk/rams/assets/repl:38a3dfb4-3859-4ed5-837e-20715c304142/f12c93fd-ea66-43d3-8c61-7bbadf58f72d/a187aad7-e76d-45c0-8386-3b5a1b16a0a2"
+storage_version_token = "1789110998141784"
+content_type = "application/octet-stream"
