@@ -56,3 +56,17 @@ mtime_ms = 1789110988426
 storage_uri = "gcs://replit-rams-assets-kirk/rams/assets/repl:38a3dfb4-3859-4ed5-837e-20715c304142/f12c93fd-ea66-43d3-8c61-7bbadf58f72d/4b230375-a4bd-41e9-8c9d-793bb4c6740a"
 storage_version_token = "1789113724985057"
 content_type = "application/octet-stream"
+
+[[outputs]]
+id = "q6z_p52E9AyjaOcqaaIYr"
+uri = "file://workrate-original-manager-ui.tar.gz"
+type = "unspecified"
+title = "workrate-original-manager-ui.tar.gz"
+description = "Existing WorkRate Manager UI archive."
+logical_id = "bca2825b-6b3a-4dd3-abe0-8789ada1704e"
+content_hash = "sha256:f8c1898de4a70bd2a1b7d6441734ab59a0019033b622b67b2be5cc80df909a65"
+size = 63772
+mtime_ms = 1789152583404
+storage_uri = "gcs://replit-rams-assets-kirk/rams/assets/repl:38a3dfb4-3859-4ed5-837e-20715c304142/bca2825b-6b3a-4dd3-abe0-8789ada1704e/b967e831-86fc-4d5a-8bc1-39fff82832b2"
+storage_version_token = "1789152932870317"
+content_type = "application/octet-stream"
