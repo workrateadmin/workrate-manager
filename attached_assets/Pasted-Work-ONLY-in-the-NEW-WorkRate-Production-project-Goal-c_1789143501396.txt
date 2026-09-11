@@ -1,0 +1,81 @@
+Work ONLY in the NEW WorkRate Production project.
+
+Goal: complete the final storage migration BEFORE publishing.
+
+Expected workspace files:
+
+`/home/runner/workspace/workrate-production-storage-export.tar.gz`
+
+`/home/runner/workspace/workrate-production-storage-export-manifest.json`
+
+Known verified export:
+
+* 25 non-marker objects
+* total non-marker bytes: `19,018,529`
+* legacy `.workrate` marker excluded
+* exact object keys preserved
+
+NEW production bucket:
+
+`replit-objstore-29d95e34-101d-4348-8bd3-eccbe4474b63`
+
+Expected production storage fingerprint:
+
+`90a87bb1f01e`
+
+Existing NEW marker must remain:
+
+`production`
+
+## Task
+
+1. Confirm both export files exist.
+2. Validate the manifest reports:
+
+   * 25 objects
+   * 19,018,529 total bytes
+   * no `.workrate` paths
+3. Confirm the NEW destination bucket currently contains no unexpected non-marker objects.
+4. Import ALL 25 exported non-marker objects into the NEW production bucket.
+5. Preserve exact object keys/paths.
+6. Do NOT upload or overwrite any `.workrate` path.
+7. Refuse to overwrite any unexpected existing destination object.
+
+## After import
+
+Perform READ-ONLY verification:
+
+* 25 non-marker objects present
+* total non-marker bytes = `19018529`
+* production marker still = `production`
+* fingerprint still = `90a87bb1f01e`
+* all 12 existing production DB storage references resolve in the NEW bucket
+* 0 production DB storage references missing
+
+Do NOT:
+
+* modify DB records
+* run migrations
+* run seeds
+* run Drizzle push
+* change source
+* change `.replit`
+* change secrets
+* publish
+* trigger external provider actions
+* touch staging
+
+Return only:
+
+* EXPORT FILES PRESENT = YES / NO
+* MANIFEST VALID = YES / NO
+* OBJECTS IMPORTED =
+* NEW BUCKET NON-MARKER OBJECTS =
+* NEW BUCKET NON-MARKER BYTES =
+* PRODUCTION DB REFERENCES RESOLVING = /12
+* PRODUCTION DB REFERENCES MISSING =
+* STORAGE MARKER =
+* ACTUAL FINGERPRINT =
+* VALIDATION MATCH = YES / NO
+* READY TO PUBLISH = YES / NO
+* ERROR = NONE or sanitized error
