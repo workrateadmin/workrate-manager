@@ -1,0 +1,101 @@
+Work ONLY in the OLD original WorkRate project.
+
+Previous inspection established:
+
+* Local branch: `main`
+* Current local HEAD:
+  `7f801eb92483888bd169fe7451a4ca290cef9396`
+* Latest valid WorkRate source commit:
+  `1348c23536c59c6e6a39055ce2f96809acacf8b8`
+* GitHub remote:
+  `https://github.com/workrateadmin/Workrate-Staging.git`
+* A normal push of local `main` was correctly refused because later history includes excluded Replit/config/export/inspection artefacts.
+
+Do NOT push local `main`.
+
+## Goal
+
+Create and push a CLEAN source-only recovery branch containing the legitimate WorkRate application source through:
+
+`1348c23536c59c6e6a39055ce2f96809acacf8b8`
+
+without including environment-specific or recovery artefacts.
+
+## Task
+
+1. Fetch the current GitHub remote.
+
+2. Create a NEW local branch based on the current remote `main`, named:
+
+`production-source-recovery`
+
+3. Compare remote `main` against the verified source state at:
+
+`1348c23536c59c6e6a39055ce2f96809acacf8b8`
+
+4. Bring across ONLY legitimate application/source changes required to make the new branch's WorkRate source match the verified source state at `1348c235...`.
+
+You may use checkout/restore/cherry-pick techniques as appropriate, but do NOT blindly cherry-pick commits containing excluded files.
+
+## Explicitly exclude
+
+Do NOT bring across:
+
+* `.replit`
+* `.env` files
+* secrets
+* database credentials
+* bucket IDs/fingerprints
+* Replit resource bindings
+* storage export archive
+* storage export manifest
+* uploaded instruction/inspection text
+* generated/runtime files
+* temporary diagnostic artefacts
+
+Do not modify the original `main` branch.
+
+5. Verify the resulting branch contains the legitimate WorkRate source changes represented by `1348c235...`.
+
+6. Create ONE clean recovery commit if required.
+
+Suggested commit message:
+
+`Recover latest verified WorkRate source`
+
+7. Push ONLY:
+
+`production-source-recovery`
+
+to GitHub.
+
+Do NOT force-push.
+
+Do NOT alter remote `main`.
+
+## Safety
+
+Do NOT:
+
+* touch database
+* touch App Storage
+* change Replit environment variables
+* edit `.replit`
+* publish/deploy
+* restart WorkRate
+* modify integrations
+* touch the NEW Production project
+
+## Return ONLY
+
+* BASED ON REMOTE MAIN = YES / NO
+* RECOVERY BRANCH =
+* VERIFIED SOURCE STATE = 1348c23536c59c6e6a39055ce2f96809acacf8b8
+* CLEAN RECOVERY COMMIT =
+* EXCLUDED FILES PRESENT IN RECOVERY COMMIT = YES / NO
+* PUSH SUCCESS = YES / NO
+* REMOTE RECOVERY BRANCH EXISTS = YES / NO
+* REMOTE MAIN MODIFIED = YES / NO
+* ERROR = NONE or sanitized error
+
+STOP after verification.
