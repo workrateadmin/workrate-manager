@@ -1,0 +1,70 @@
+Work ONLY in the OLD original WorkRate project.
+
+Do NOT change runtime configuration, App Storage, database, secrets, integrations, deployment, domains, or `.replit`.
+
+Goal: prepare the latest WorkRate application source for safe transfer to the recovery GitHub repository without carrying over broken production environment/resource configuration.
+
+Known source history:
+
+* GitHub/recovered Production source was based on:
+  `1bfcf77da639585e66709e9b7c3ae3c5a3063b66`
+
+* This OLD original project later showed a newer source revision beginning:
+  `1348c23`
+
+We need the newest valid WorkRate application source preserved.
+
+## Task
+
+1. Inspect the current Git state and report:
+
+   * current branch
+   * current HEAD commit
+   * whether the workspace has uncommitted source changes
+   * which source changes exist after `1bfcf77...`
+
+2. Identify the latest legitimate WorkRate source changes, including where present:
+
+   * application/product code
+   * PORT fallback fix
+   * storage read timeout fix
+   * build-ID fix
+   * any later legitimate bug fixes
+
+3. EXCLUDE environment/project-specific files from any recovery commit, especially:
+
+   * `.replit`
+   * secrets
+   * `.env` files
+   * production bucket IDs
+   * storage fingerprints
+   * database credentials
+   * Replit resource bindings
+   * generated/runtime files
+   * exported storage archives/manifests
+
+4. Do NOT modify application source for this task.
+
+5. If the current source is clean and already committed, report the exact latest commit only.
+
+6. If there are legitimate uncommitted SOURCE changes, create ONE source-only recovery commit containing only those application/source files.
+
+Do not include environment/configuration artifacts.
+
+7. Do NOT push to GitHub yet.
+
+## Return ONLY
+
+* CURRENT BRANCH =
+* CURRENT HEAD =
+* LATEST VALID SOURCE COMMIT =
+* UNCOMMITTED SOURCE CHANGES = YES / NO
+* RECOVERY COMMIT CREATED = YES / NO
+* RECOVERY COMMIT HASH =
+* EXCLUDED ENVIRONMENT FILES =
+* SAFE TO PUSH SOURCE ONLY = YES / NO
+* ERROR = NONE or sanitized error
+
+STOP after this.
+
+Do not deploy, publish, restart, migrate, modify storage, modify database, or touch the NEW Production project.
