@@ -1,0 +1,67 @@
+Create a downloadable archive containing ONLY the original WorkRate Manager frontend UI files listed below.
+
+Do not modify any source files.
+
+Include:
+
+artifacts/workrate/src/components/layout.tsx
+artifacts/workrate/src/components/environment-banner.tsx
+artifacts/workrate/src/components/setup-banner.tsx
+artifacts/workrate/src/components/summary-card.tsx
+
+artifacts/workrate/src/components/ui/button.tsx
+artifacts/workrate/src/components/ui/card.tsx
+artifacts/workrate/src/components/ui/table.tsx
+artifacts/workrate/src/components/ui/toaster.tsx
+artifacts/workrate/src/components/ui/badge.tsx
+artifacts/workrate/src/components/ui/dialog.tsx
+artifacts/workrate/src/components/ui/input.tsx
+artifacts/workrate/src/components/ui/label.tsx
+artifacts/workrate/src/components/ui/select.tsx
+artifacts/workrate/src/components/ui/skeleton.tsx
+artifacts/workrate/src/components/ui/textarea.tsx
+
+artifacts/workrate/src/pages/dashboard.tsx
+artifacts/workrate/src/pages/enquiries.tsx
+artifacts/workrate/src/pages/jobs.tsx
+artifacts/workrate/src/pages/schedule.tsx
+artifacts/workrate/src/pages/quotes.tsx
+artifacts/workrate/src/pages/invoices.tsx
+artifacts/workrate/src/pages/finance.tsx
+
+artifacts/workrate/src/index.css
+
+Also include:
+
+artifacts/workrate/src/App.tsx
+
+BUT keep App.tsx clearly separate in the archive because the NEW Production version may contain production/demo-specific routing changes and must NOT be blindly overwritten.
+
+Create this actual downloadable file in the workspace root:
+
+workrate-original-manager-ui.tar.gz
+
+Preserve exact relative paths.
+
+Do NOT include:
+
+- .replit
+- environment files
+- secrets
+- backend/API code
+- database/storage code
+- generated files
+- node_modules
+- instruction files
+- deployment config
+
+After creation verify the archive physically exists.
+
+Return only:
+
+- ARCHIVE CREATED = YES / NO
+- ARCHIVE PATH =
+- FILE COUNT =
+- APP.TSX INCLUDED = YES / NO
+- NON-FRONTEND FILES INCLUDED = YES / NO
+- ERROR =
