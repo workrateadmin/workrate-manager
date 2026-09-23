@@ -1,0 +1,336 @@
+Perform a DESTINATION PRODUCTION DATABASE SETUP + MIGRATION PLANNING pass for the new full WorkRate project.
+
+IMPORTANT:
+Do NOT:
+- modify the original live production database
+- publish
+- change callbacks/domains
+- make real provider calls
+- send messages/emails/calls
+- perform payments/HMRC submissions/Zadarma orders
+- overwrite production storage objects
+- print secrets
+
+The original live WorkRate project has now been confirmed as the source of truth:
+
+SOURCE LIVE PROJECT
+- deployment: https://work-rate-manager.replit.app
+- production Neon DB reachable
+- DB marker: production
+- active WorkRate data present
+- Vapi mappings present
+- HMRC sandbox connection present
+- current Stripe runtime = TEST
+- original tracked migration state = 28 applied, latest shown as 0024_hmrc_quarterly_preparation
+- production storage remains separately complicated by the historical bucket binding issue
+
+The destination full WorkRate project is:
+- full source present
+- Vapi/Zadarma/AI receptionist code present
+- destination storage binding present
+- no active deployment yet
+- no provisioned/reachable production DB yet
+
+GOAL:
+Prepare the destination production database safely, determine the exact migration path from the old live schema to the current schema, and produce a controlled restore/migration plan.
+
+==================================================
+1. DESTINATION DATABASE
+==================================================
+
+Check whether this project already has a production database provisioned.
+
+If NO:
+- determine the correct Replit-supported method to provision a new production PostgreSQL/Neon database for this project
+- do not guess credentials
+- do not expose connection strings
+- if provisioning can be safely performed without publishing or touching the source database, provision it
+- otherwise report the exact manual action required
+
+If YES:
+- confirm reachability
+- confirm it is empty/new or identify existing schema state
+- verify environment marker
+
+Do not import source data yet unless explicitly instructed later.
+
+==================================================
+2. DESTINATION DATABASE IDENTITY
+==================================================
+
+Verify or create a safe production environment marker for the destination DB only if this can be done without conflicting with the app’s existing environment-safety system.
+
+Do not fake production state.
+
+Report:
+- destination DB present
+- reachable
+- empty/non-empty
+- environment marker
+- database identifier/fingerprint in a SAFE non-secret form
+
+==================================================
+3. SOURCE MIGRATION RECONCILIATION
+==================================================
+
+Using only the known source migration metadata and current repository migrations, determine why the source production DB reports:
+
+28 applied migrations
+latest name = 0024_hmrc_quarterly_preparation
+
+Do not assume migration numbering equals count.
+
+Inspect the full migration directory and map:
+- tracked migration order
+- migration filenames
+- schema effects
+- migrations required after the current live source state
+- migrations 0030–0033
+- any 0034+ migrations now present
+
+Return the exact ordered migration sequence required after restore.
+
+==================================================
+4. RESTORE-FIRST STRATEGY
+==================================================
+
+Evaluate the safest flow:
+
+A.
+new empty destination DB
+→ restore controlled dump of source production DB
+→ verify identity/data
+→ reconcile migration tracking
+→ apply remaining migrations in order
+
+versus any safer supported alternative.
+
+Prefer preserving:
+- primary keys
+- tenant IDs
+- timestamps
+- relationships
+- audit logs
+- integration mappings
+- Vapi call/enquiry records
+- finance records
+- HMRC records
+
+Do not perform source dump/restore yet unless explicitly instructed.
+
+==================================================
+5. MIGRATION COMPATIBILITY DRY RUN
+==================================================
+
+Create a LOCAL/EPHEMERAL test database.
+
+Simulate the production upgrade path as closely as possible:
+
+1. recreate schema at the source production migration state
+2. load representative synthetic data for:
+   - company/tenant
+   - users
+   - enquiries
+   - contacts
+   - conversations/messages
+   - quotes
+   - jobs
+   - invoices/payments
+   - integrations
+   - Vapi mappings/calls
+   - finance
+   - HMRC sandbox connection metadata
+3. apply the remaining current migrations in the exact proposed order
+4. verify data survives and relationships remain valid
+
+Do NOT use real production customer data.
+
+==================================================
+6. MIGRATION TRACKING RECONCILIATION
+==================================================
+
+The source DB may contain schema changes that were historically applied differently from the current tracked runner.
+
+Develop a controlled reconciliation plan.
+
+Requirements:
+- inspect schema before marking anything applied
+- never mark a migration applied if its schema changes are absent
+- if schema structure exists but tracking row is absent, record it only through the explicit controlled reconciliation mechanism
+- preserve source='controlled_reconciliation' behavior where already implemented
+- produce audit output for each reconciled migration
+
+Do not reconcile the real source DB.
+
+==================================================
+7. DATA VALIDATION PLAN
+==================================================
+
+Define post-restore checks for the destination.
+
+Include counts/checks for:
+
+- companies
+- users/account mappings
+- contacts
+- enquiries
+- conversations
+- messages
+- quotes
+- jobs
+- invoices
+- payments
+- expenses/income
+- integration rows
+- Vapi mappings
+- AI calls
+- HMRC connections
+- audit logs
+- object-storage references
+
+Also verify:
+- no duplicate tenant IDs
+- no broken foreign keys
+- no duplicate final invoices
+- no duplicate jobs for accepted enquiries
+- no invalid payment/deposit state
+- workflow consistency checker passes
+
+==================================================
+8. STORAGE REFERENCE COMPATIBILITY
+==================================================
+
+Do not copy storage yet.
+
+Inspect how database file/object references are stored.
+
+Confirm whether preserving exact object keys during storage migration will keep DB references valid.
+
+Report:
+- key format
+- whether bucket identity is embedded
+- whether URLs are stored or keys are stored
+- whether signed URLs are stored
+- whether any DB values must be rewritten after storage copy
+
+Do not expose private filenames unnecessarily.
+
+==================================================
+9. PROVIDER MAPPING PRESERVATION
+==================================================
+
+Confirm the restore will preserve database-backed mappings for:
+
+- Vapi tenant integrations
+- Vapi phone mappings
+- AI receptionist settings
+- WhatsApp integration mappings
+- HMRC connection metadata
+- Stripe customer/subscription mappings if any
+- Zadarma mappings if any
+
+Distinguish:
+- DB-backed mapping preserved automatically
+- secret/config must be re-entered
+- callback must be repointed
+- OAuth/token may need regeneration
+
+==================================================
+10. ORIGINAL SOURCE SAFETY
+==================================================
+
+The original live project must remain untouched as rollback.
+
+Explicitly confirm:
+
+SOURCE DB MODIFIED = NO
+SOURCE STORAGE MODIFIED = NO
+SOURCE CALLBACKS MODIFIED = NO
+SOURCE DEPLOYMENT MODIFIED = NO
+
+==================================================
+11. DESTINATION SAFETY
+==================================================
+
+Do not make destination live.
+
+Do not publish.
+
+Do not attach public domains.
+
+Do not enable:
+- live Stripe
+- Vapi webhook traffic
+- Meta webhooks
+- HMRC callbacks
+- Zadarma auto provisioning
+
+==================================================
+12. DATABASE TRANSFER COMMAND PLAN
+==================================================
+
+Prepare the exact SAFE execution plan for the next phase.
+
+If pg_dump/pg_restore is recommended, specify:
+- format
+- flags
+- schema/data handling
+- ownership/privilege handling
+- extension considerations
+- verification steps
+
+Do not print DB URLs or passwords.
+
+Do not execute yet unless explicitly approved.
+
+==================================================
+13. ROLLBACK PLAN
+==================================================
+
+Define rollback:
+
+Before cutover:
+- original remains authoritative
+
+After restore but before cutover:
+- discard destination and repeat if validation fails
+
+After eventual cutover:
+- keep original deployment/database unchanged for an agreed rollback window
+
+Do not delete anything.
+
+==================================================
+14. FINAL STATUS
+==================================================
+
+Return only:
+
+DESTINATION PROJECT CONFIRMED = YES / NO
+DESTINATION DB PRESENT = YES / NO
+DESTINATION DB PROVISIONED THIS RUN = YES / NO
+DESTINATION DB REACHABLE = YES / NO
+DESTINATION DB EMPTY = YES / NO / UNKNOWN
+DESTINATION DB MARKER = PRODUCTION / DEVELOPMENT / UNKNOWN
+SOURCE MIGRATION STATE UNDERSTOOD = YES / NO / PARTIAL
+EXACT UPGRADE SEQUENCE = READY / PARTIAL / BLOCKED
+MIGRATION RECONCILIATION PLAN = READY / PARTIAL / BLOCKED
+EPHEMERAL UPGRADE DRY RUN = PASS / FAIL / NOT RUN
+SYNTHETIC DATA SURVIVAL = PASS / FAIL / NOT RUN
+FOREIGN KEY VALIDATION = PASS / FAIL / NOT RUN
+WORKFLOW CONSISTENCY = PASS / FAIL / NOT RUN
+STORAGE KEY COMPATIBILITY = PASS / FAIL / PARTIAL
+DB VALUES REQUIRE STORAGE REWRITE = YES / NO / UNKNOWN
+PROVIDER DB MAPPINGS PRESERVED BY RESTORE = YES / NO / PARTIAL
+SECRETS STILL REQUIRE MANUAL TRANSFER = YES / NO
+CALLBACKS STILL REQUIRE REPOINTING = YES / NO
+PG_DUMP / RESTORE PLAN = READY / PARTIAL / BLOCKED
+ROLLBACK PLAN = READY / PARTIAL / BLOCKED
+SOURCE DB MODIFIED = YES / NO
+SOURCE STORAGE MODIFIED = YES / NO
+SOURCE CALLBACKS MODIFIED = YES / NO
+DESTINATION PUBLISHED = YES / NO
+REAL PROVIDER CALLS = YES / NO
+NEXT EXECUTION STEP =
+BLOCKERS =
+ERRORS =
