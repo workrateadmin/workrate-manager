@@ -1,0 +1,392 @@
+Perform a READ-ONLY MIGRATION SOURCE AUDIT of this ORIGINAL WorkRate project.
+
+IMPORTANT:
+This project may contain the old production database, storage, provider mappings, secrets, webhook settings, and production configuration needed by the new full WorkRate project.
+
+DO NOT:
+- modify production data
+- change secrets
+- print secret values
+- publish
+- change callbacks/domains
+- make real provider calls
+- send emails/messages/calls
+- perform payments
+- perform HMRC submissions
+- order Zadarma numbers
+- run destructive migrations
+
+GOAL:
+Determine exactly what can be safely transferred from this original project into the new full WorkRate project automatically, without exposing credentials.
+
+==================================================
+1. ORIGINAL PROJECT IDENTITY
+==================================================
+
+Confirm:
+- project/repl identifier
+- git HEAD
+- active deployment yes/no
+- deployment URL if present
+- production database binding/reachability
+- production storage binding/reachability
+- environment marker
+- storage marker/fingerprint
+
+Do not print secret values.
+
+==================================================
+2. PRODUCTION DATABASE
+==================================================
+
+Read-only inspection only.
+
+Confirm:
+- database reachable yes/no
+- environment marker
+- migration state
+- company/tenant count
+- critical tables present
+- whether this is the database previously used by live WorkRate
+
+Do not modify anything.
+
+==================================================
+3. STORAGE
+==================================================
+
+Read-only inspection only.
+
+Confirm:
+- active bucket/storage binding
+- storage marker/fingerprint
+- total object count
+- total approximate size
+- database-referenced object count
+- unresolved DB references
+- whether this is the legacy/live bucket used by WorkRate
+
+Do not move/copy/delete anything yet.
+
+==================================================
+4. PROVIDER CONFIGURATION INVENTORY
+==================================================
+
+Inspect source/config/environment presence only.
+
+For each return:
+PRESENT
+MISSING
+PARTIAL
+NOT USED
+
+Check:
+
+- Clerk
+- OpenAI
+- Resend
+- Stripe
+- Vapi
+- Zadarma
+- Meta / WhatsApp
+- HMRC
+- admin allowlist
+- encryption/signing keys
+- webhook URLs
+- callback URLs
+- public app URL
+- widget endpoint/config
+
+Do NOT reveal values.
+
+==================================================
+5. VAPI STATE
+==================================================
+
+Read-only.
+
+Identify whether this project contains:
+
+- Vapi assistant IDs/mappings
+- phone resource IDs/mappings
+- tenant-to-assistant mappings
+- tenant-to-phone mappings
+- webhook URL/config
+- AI receptionist settings
+- existing call records
+
+Return counts/status only where possible.
+
+Do not call Vapi.
+
+==================================================
+6. ZADARMA STATE
+==================================================
+
+Read-only.
+
+Identify:
+
+- API credential presence
+- SIP config presence
+- Vapi credential mapping presence
+- number pool records
+- assigned numbers
+- tenant-number mappings
+- auto-provisioning state
+- cost safeguards
+- allowed destination/type config
+
+Return statuses/counts only.
+
+Do not call Zadarma.
+
+==================================================
+7. META / WHATSAPP STATE
+==================================================
+
+Read-only.
+
+Identify:
+
+- token/config presence
+- phone_number_id mappings
+- tenant mappings
+- webhook verification/signing config
+- existing integration records
+- conversation/message data
+
+Return counts/status only.
+
+Do not send anything.
+
+==================================================
+8. STRIPE STATE
+==================================================
+
+Read-only.
+
+Determine:
+
+- test/live mode if safely inferable
+- webhook config presence
+- product/price ID config presence
+- existing customer/subscription mapping records
+
+Do not call Stripe unless an existing safe local record is sufficient.
+Prefer database/config inspection only.
+
+==================================================
+9. HMRC STATE
+==================================================
+
+Read-only.
+
+Determine:
+
+- sandbox/live mode
+- OAuth config presence
+- gateway config
+- callback config
+- stored tenant connection records
+- token storage/encryption state
+- submission/audit records
+
+Do not call HMRC.
+
+==================================================
+10. SECRET TRANSFER CAPABILITY
+==================================================
+
+CRITICAL:
+
+Determine whether Replit supports any SAFE method to transfer secrets/environment variables directly from this project to another project without:
+
+- printing values
+- exporting plaintext
+- placing secrets in a file
+- exposing them in logs/chat
+
+Inspect available project tooling/CLI/API capabilities.
+
+Potential acceptable methods:
+- native duplicate/copy environment feature
+- secure project-to-project secret copy
+- CLI/API secret read/write where values never appear in output
+- encrypted secret transfer mechanism
+
+DO NOT perform the transfer yet.
+
+Return:
+SAFE SECRET AUTO-TRANSFER AVAILABLE = YES / NO / UNKNOWN
+
+If YES:
+describe the mechanism without exposing values.
+
+If NO:
+state that manual secret re-entry will be required.
+
+==================================================
+11. DATABASE TRANSFER OPTIONS
+==================================================
+
+Determine safest automated method to move/reconnect the production database to the new WorkRate project.
+
+Evaluate:
+
+A. reuse/reconnect same production database
+B. managed database clone
+C. pg_dump/pg_restore
+D. logical row copy
+E. other supported Replit mechanism
+
+Do not execute.
+
+Prefer preserving IDs, timestamps, tenant relationships, audit trails, and provider mappings.
+
+Return recommended method and why.
+
+==================================================
+12. STORAGE TRANSFER OPTIONS
+==================================================
+
+Determine safest automated method for transferring/reconnecting storage.
+
+Evaluate:
+
+A. reuse same bucket binding
+B. direct object copy
+C. manifest-driven transfer
+D. provider-native copy
+E. other supported method
+
+Do not execute.
+
+Verify whether object keys can remain unchanged so DB references continue to work.
+
+==================================================
+13. CONFIG TRANSFER PLAN
+==================================================
+
+Create a transfer classification:
+
+AUTO TRANSFER SAFE
+MANUAL REQUIRED
+DO NOT TRANSFER
+REGENERATE
+
+Cover:
+
+- production database
+- object storage
+- Clerk config
+- OpenAI
+- Resend
+- Stripe
+- Vapi
+- Zadarma
+- Meta/WhatsApp
+- HMRC
+- admin allowlist
+- encryption keys
+- webhook URLs
+- callback URLs
+- public app URL
+- tenant provider mappings
+- number mappings
+- migration state
+- audit records
+
+==================================================
+14. OLD URL / CALLBACK INVENTORY
+==================================================
+
+List all current production-facing URLs by CATEGORY only.
+
+Examples:
+
+APP URL
+VAPI WEBHOOK
+STRIPE WEBHOOK
+META WEBHOOK
+HMRC CALLBACK
+WIDGET ENDPOINT
+RESEND GENERATED LINKS
+
+You may show non-secret public URLs.
+
+Redact any secret-bearing query values/tokens.
+
+Mark each:
+- KEEP
+- REPOINT
+- REGENERATE
+- UNKNOWN
+
+==================================================
+15. TRANSFER SAFETY
+==================================================
+
+Explicitly identify anything that MUST NOT be blindly copied, including:
+
+- environment-specific database URLs
+- stale old deployment URLs
+- temporary Replit preview URLs
+- webhook secrets tied to old endpoints
+- signed URLs
+- expired OAuth tokens
+- test Stripe credentials if moving to live
+- environment markers
+- deployment IDs
+
+==================================================
+16. DO NOT EXECUTE YET
+==================================================
+
+This task is AUDIT + PLAN ONLY.
+
+No transfer should occur in this run.
+
+==================================================
+RETURN ONLY
+==================================================
+
+ORIGINAL PROJECT CONFIRMED = YES / NO
+ACTIVE DEPLOYMENT = YES / NO
+DEPLOYMENT URL =
+PRODUCTION DB = PRESENT / MISSING / UNKNOWN
+PRODUCTION DB REACHABLE = YES / NO
+DB ENVIRONMENT MARKER =
+MIGRATION STATE =
+PRODUCTION STORAGE = PRESENT / MISSING / UNKNOWN
+STORAGE REACHABLE = YES / NO
+STORAGE OBJECT COUNT =
+DB-REFERENCED OBJECT COUNT =
+MISSING OBJECT REFERENCES =
+CLERK = PRESENT / MISSING / PARTIAL
+OPENAI = PRESENT / MISSING / PARTIAL
+RESEND = PRESENT / MISSING / PARTIAL
+STRIPE = PRESENT / MISSING / PARTIAL
+VAPI = PRESENT / MISSING / PARTIAL
+ZADARMA = PRESENT / MISSING / PARTIAL
+META WHATSAPP = PRESENT / MISSING / PARTIAL
+HMRC = PRESENT / MISSING / PARTIAL
+ADMIN ALLOWLIST = PRESENT / MISSING
+TENANT PROVIDER MAPPINGS = PRESENT / MISSING / PARTIAL
+PHONE NUMBER MAPPINGS = PRESENT / MISSING / PARTIAL
+SAFE SECRET AUTO-TRANSFER AVAILABLE = YES / NO / UNKNOWN
+SECRET TRANSFER METHOD =
+RECOMMENDED DATABASE TRANSFER =
+RECOMMENDED STORAGE TRANSFER =
+AUTO TRANSFER SAFE =
+MANUAL REQUIRED =
+DO NOT TRANSFER =
+REGENERATE =
+OLD CALLBACK INVENTORY = COMPLETE / PARTIAL / FAIL
+PRODUCTION DATA MODIFIED = YES / NO
+PRODUCTION OBJECTS MODIFIED = YES / NO
+SECRETS EXPOSED = YES / NO
+REAL PROVIDER CALLS = YES / NO
+PUBLISHED = YES / NO
+BLOCKERS =
+ERRORS =
