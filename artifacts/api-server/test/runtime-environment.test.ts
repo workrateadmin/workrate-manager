@@ -222,6 +222,27 @@ test("storage roots are bound to the configured bucket", () => {
   );
 });
 
+test("portable GCS roots and environment marker use the configured bucket identity", async () => {
+  const variables = {
+    WORKRATE_ENV: "production",
+    WORKRATE_STORAGE_ENV: "production",
+    WORKRATE_STORAGE_BACKEND: "gcs",
+    WORKRATE_STORAGE_BUCKET: "portable-production-bucket",
+    WORKRATE_STORAGE_PRIVATE_ROOT: "portable-production-bucket/.private",
+    WORKRATE_STORAGE_PUBLIC_ROOTS: "portable-production-bucket/public",
+  };
+  const config = getStorageEnvironmentConfig(variables);
+  assert.ok(config);
+  assert.equal(config.bucketId, "portable-production-bucket");
+  assert.equal(config.environmentObjectPrefix, ".private/production");
+
+  const store = memoryMarkerStore();
+  await initializeStorageBucketEnvironment(config, store);
+  const verified = await assertStorageBucketEnvironment(config, store);
+  assert.equal(verified.environment, "production");
+  assert.equal(verified.bucketFingerprint, config.bucketFingerprint);
+});
+
 function memoryMarkerStore(): StorageBucketMarkerStore & {
   objects: Map<string, Buffer>;
 } {
