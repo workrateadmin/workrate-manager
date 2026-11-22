@@ -15,6 +15,7 @@ import {
   UpdateQuoteResponse,
 } from "@workspace/api-zod";
 import OpenAI from "openai";
+import { getWorkRatePublicUrl } from "../lib/public-url";
 
 const router: IRouter = Router();
 
@@ -57,15 +58,13 @@ function generateProposalToken(): string {
 /**
  * Public URL used in customer proposal emails.
  *
- * A configured public URL must win over REPLIT_DEV_DOMAIN: the latter is only
- * suitable for workspace previews and creates broken links in production email.
+ * Proposal links use an explicit proposal URL when configured, otherwise the
+ * canonical WorkRate public URL. Production never depends on a host-specific preview URL.
  */
 function getProposalBaseUrl(): string {
   const configuredUrl = process.env.PROPOSAL_BASE_URL?.trim();
   if (configuredUrl) return configuredUrl.replace(/\/+$/, "");
-
-  const devDomain = process.env.REPLIT_DEV_DOMAIN?.trim();
-  return devDomain ? `https://${devDomain}` : "";
+  return getWorkRatePublicUrl();
 }
 
 function pdfFilenamePart(value: unknown, fallback: string): string {

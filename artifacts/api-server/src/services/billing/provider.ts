@@ -6,6 +6,7 @@ import { trialPriceGbp } from "./pricing";
 import { grantReceptionistTopUpFromStripeSession } from "./topups";
 import { isStripeBillingReady, setStripeBillingReady } from "./readiness";
 import { getWorkRateEnvironment } from "../../lib/runtime-environment";
+import { getWorkRatePublicUrl } from "../../lib/public-url";
 
 export type PaymentSetupUnavailable = { ok: false; code: "PAYMENT_SETUP_UNAVAILABLE"; message: string };
 export type ProviderResult = PaymentSetupUnavailable | { ok: true; url?: string; status?: string };
@@ -19,11 +20,7 @@ export interface BillingProvider {
   verifyWebhook(input: { payload: Buffer; signature?: string }): Promise<ProviderResult>;
 }
 const unavailable = (): PaymentSetupUnavailable => ({ ok: false, code: "PAYMENT_SETUP_UNAVAILABLE", message: "Payments are not configured yet. No payment or subscription was created." });
-const returnUrl = () => {
-  const host = process.env.REPLIT_DOMAINS?.split(",")[0];
-  if (!host) throw new Error("REPLIT_DOMAINS is required to create hosted billing sessions.");
-  return `https://${host}/settings/billing`;
-};
+const returnUrl = () => `${getWorkRatePublicUrl()}/settings/billing`;
 const date = (seconds?: number | null) => seconds ? new Date(seconds * 1000) : null;
 const local = (companyId: number, ownerUserId: string) => db.select().from(companySubscriptionsTable).where(and(eq(companySubscriptionsTable.companyId, companyId), eq(companySubscriptionsTable.ownerUserId, ownerUserId))).limit(1);
 type StripeApi = Pick<StripeApiClient, "get" | "post">;
@@ -293,13 +290,7 @@ const webhookEventTypes = [
   "invoice.paid",
 ] as const;
 function workRateStripeWebhookUrl(): string {
-  const explicit = process.env.WORKRATE_PUBLIC_URL?.trim().replace(/\/+$/, "");
-  if (explicit) return `${explicit}/api/stripe/webhook`;
-  const developmentHost = process.env.REPLIT_DOMAINS?.split(",")[0]?.trim();
-  if (getWorkRateEnvironment() === "development" && developmentHost) {
-    return `https://${developmentHost}/api/stripe/webhook`;
-  }
-  throw new Error("WORKRATE_PUBLIC_URL is required for this environment.");
+  return `${getWorkRatePublicUrl()}/api/stripe/webhook`;
 }
 
 /** Validates and maintains the single approved test webhook endpoint. */

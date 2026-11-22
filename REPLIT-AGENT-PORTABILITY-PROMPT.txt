@@ -1,0 +1,21 @@
+I have uploaded `workrate-manager-portability-patch.zip` to the root of the ORIGINAL WorkRate Manager project.
+
+This is a code-only portability patch prepared from an exported copy of this exact project. Its purpose is to make WorkRate portable to standard PostgreSQL + Google Cloud Storage while retaining the existing Replit storage path as a fallback during transition.
+
+DO NOT touch or migrate production data yet.
+
+Please do the following in order:
+
+1. Create a checkpoint before modifying files.
+2. Inspect `docs/PORTABILITY-PATCH-MANIFEST.md` inside the patch archive before applying it.
+3. List the files that the patch will overwrite/add and confirm they match the manifest.
+4. Apply the patch files at their exact relative paths. Do not modify unrelated files.
+5. Do NOT change DATABASE_URL, Secrets, Object Storage configuration, the production bucket, Publishing settings, domains, provider webhooks, or any production database.
+6. Do NOT publish.
+7. Run `node scripts/verify-portability.mjs`.
+8. Run the existing API typecheck/build and the existing WorkRate frontend production build. Run the existing runtime/storage/billing tests that cover the files touched by the patch. If a test fails because of this patch, fix only the patch-related code and rerun it. Do not make broad refactors.
+9. Confirm the original Replit runtime path still remains supported when `WORKRATE_STORAGE_BACKEND` is not set and no external GCS credentials are present.
+10. Confirm external mode can be selected with `WORKRATE_STORAGE_BACKEND=gcs`, that production public URLs come from `WORKRATE_PUBLIC_URL`, and that the database remains standard `DATABASE_URL` PostgreSQL.
+11. Report the exact files changed and test/build results. Stop there. Do not publish or perform any migration.
+
+This task is CODE VALIDATION ONLY. No production writes, storage writes, provider calls, schema changes, secret changes, or deployments.

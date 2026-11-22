@@ -19,23 +19,61 @@ import {
 
 const REPLIT_SIDECAR_ENDPOINT = 'http://127.0.0.1:1106';
 
-export const objectStorageClient = new Storage({
-  credentials: {
-    audience: 'replit',
-    subject_token_type: 'access_token',
-    token_url: `${REPLIT_SIDECAR_ENDPOINT}/token`,
-    type: 'external_account',
-    credential_source: {
-      url: `${REPLIT_SIDECAR_ENDPOINT}/credential`,
-      format: {
-        type: 'json',
-        subject_token_field_name: 'access_token',
+type StorageBackend = 'replit' | 'gcs';
+
+function storageBackend(): StorageBackend {
+  const configured = process.env.WORKRATE_STORAGE_BACKEND?.trim().toLowerCase();
+  if (configured === 'replit' || configured === 'gcs') return configured;
+  if (
+    process.env.GCS_SERVICE_ACCOUNT_JSON ||
+    process.env.GOOGLE_APPLICATION_CREDENTIALS ||
+    process.env.GCS_PROJECT_ID
+  ) {
+    return 'gcs';
+  }
+  return 'replit';
+}
+
+function createStorageClient(): Storage {
+  if (storageBackend() === 'gcs') {
+    const rawCredentials = process.env.GCS_SERVICE_ACCOUNT_JSON?.trim();
+    if (rawCredentials) {
+      let credentials: Record<string, unknown>;
+      try {
+        credentials = JSON.parse(rawCredentials) as Record<string, unknown>;
+      } catch {
+        throw new Error('GCS_SERVICE_ACCOUNT_JSON must contain valid JSON.');
+      }
+      const projectId = process.env.GCS_PROJECT_ID?.trim()
+        || (typeof credentials.project_id === 'string' ? credentials.project_id : undefined);
+      return new Storage({ credentials: credentials as any, projectId });
+    }
+
+    return new Storage({
+      projectId: process.env.GCS_PROJECT_ID?.trim() || undefined,
+    });
+  }
+
+  return new Storage({
+    credentials: {
+      audience: 'replit',
+      subject_token_type: 'access_token',
+      token_url: `${REPLIT_SIDECAR_ENDPOINT}/token`,
+      type: 'external_account',
+      credential_source: {
+        url: `${REPLIT_SIDECAR_ENDPOINT}/credential`,
+        format: {
+          type: 'json',
+          subject_token_field_name: 'access_token',
+        },
       },
+      universe_domain: 'googleapis.com',
     },
-    universe_domain: 'googleapis.com',
-  },
-  projectId: '',
-});
+    projectId: '',
+  });
+}
+
+export const objectStorageClient = createStorageClient();
 
 export class ObjectNotFoundError extends Error {
   constructor() {
@@ -225,6 +263,21 @@ async function signObjectURL({
   method: 'GET' | 'PUT' | 'DELETE' | 'HEAD';
   ttlSec: number;
 }): Promise<string> {
+  if (storageBackend() === 'gcs') {
+    const action = method === 'PUT' ? 'write'
+      : method === 'DELETE' ? 'delete'
+      : 'read';
+    const [signedUrl] = await objectStorageClient
+      .bucket(bucketName)
+      .file(objectName)
+      .getSignedUrl({
+        version: 'v4',
+        action,
+        expires: Date.now() + ttlSec * 1000,
+      });
+    return signedUrl;
+  }
+
   const request = {
     bucket_name: bucketName,
     object_name: objectName,
@@ -244,8 +297,7 @@ async function signObjectURL({
   );
   if (!response.ok) {
     throw new Error(
-      `Failed to sign object URL, errorcode: ${response.status}, ` +
-        `make sure you're running on Replit`,
+      `Failed to sign object URL, errorcode: ${response.status}.`,
     );
   }
 

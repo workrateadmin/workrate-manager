@@ -4,6 +4,7 @@ import { db, companiesTable, integrationsTable } from "@workspace/db";
 import { eq, and } from "drizzle-orm";
 import { decryptIntegrationSecret, encryptIntegrationSecret } from "../lib/integration-secret";
 import { isRecentWidgetHeartbeat, safeWidgetSiteOrigin } from "../lib/widget-heartbeat";
+import { getWorkRatePublicUrl } from "../lib/public-url";
 
 const router: IRouter = Router();
 const VAPI_WEBHOOK_PATH = "/api/webhooks/vapi";
@@ -260,7 +261,7 @@ router.post("/integrations/whatsapp_business/connect", requireAuth, async (req, 
     status:        "connected",
     phoneNumberId,
     displayNumber: displayNumber ?? null,
-    webhookUrl:    `https://work-rate-manager.replit.app/api/webhooks/whatsapp`,
+    webhookUrl:    `${getWorkRatePublicUrl()}/api/webhooks/whatsapp`,
     message:       "WhatsApp Business connected. Register the webhook URL in your Meta App dashboard.",
   });
 });

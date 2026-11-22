@@ -1,5 +1,5 @@
 /**
- * Server-side upload utility for Replit Object Storage.
+ * Server-side upload utility for WorkRate object storage.
  *
  * The chat upload handler and concept-visuals route write files server-side
  * (not via presigned URLs). This utility wraps the GCS client so both routes
@@ -12,7 +12,7 @@ import {
   requireStorageEnvironmentConfig,
   resolvePrivateObjectPath,
 } from "./storage-environment";
-import { getWorkRateEnvironment } from "./runtime-environment";
+import { getWorkRatePublicUrl } from "./public-url";
 
 // ── Public API ────────────────────────────────────────────────────────────────
 
@@ -91,14 +91,7 @@ export function storageServingUrl(
 
 export function storageServingUrlFromRuntime(objectPath: string): string {
   resolvePrivateObjectPath(objectPath);
-  const explicit = process.env.WORKRATE_PUBLIC_URL?.trim().replace(/\/+$/, "");
-  if (explicit) return `${explicit}/api/storage${objectPath}`;
-
-  const developmentHost = process.env.REPLIT_DOMAINS?.split(",")[0]?.trim();
-  if (getWorkRateEnvironment() === "development" && developmentHost) {
-    return `https://${developmentHost}/api/storage${objectPath}`;
-  }
-  throw new Error("WORKRATE_PUBLIC_URL is required to create storage URLs.");
+  return `${getWorkRatePublicUrl()}/api/storage${objectPath}`;
 }
 
 /**

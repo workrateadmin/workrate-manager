@@ -46,11 +46,13 @@ function parseRoot(value: string, label: string): StorageRoot {
 export function getStorageEnvironmentConfig(
   environmentVariables: EnvironmentVariables = process.env,
 ): StorageEnvironmentConfig | null {
-  const configuredValues = [
-    environmentVariables["DEFAULT_OBJECT_STORAGE_BUCKET_ID"],
-    environmentVariables["PRIVATE_OBJECT_DIR"],
-    environmentVariables["PUBLIC_OBJECT_SEARCH_PATHS"],
-  ];
+  const bucketValue = environmentVariables["WORKRATE_STORAGE_BUCKET"]
+    ?? environmentVariables["DEFAULT_OBJECT_STORAGE_BUCKET_ID"];
+  const privateRootValue = environmentVariables["WORKRATE_STORAGE_PRIVATE_ROOT"]
+    ?? environmentVariables["PRIVATE_OBJECT_DIR"];
+  const publicRootsValue = environmentVariables["WORKRATE_STORAGE_PUBLIC_ROOTS"]
+    ?? environmentVariables["PUBLIC_OBJECT_SEARCH_PATHS"];
+  const configuredValues = [bucketValue, privateRootValue, publicRootsValue];
   if (configuredValues.every((value) => !value?.trim())) return null;
   if (configuredValues.some((value) => !value?.trim())) {
     throw new Error("Object storage configuration is incomplete.");
@@ -61,18 +63,20 @@ export function getStorageEnvironmentConfig(
     throw new Error("WORKRATE_STORAGE_ENV must exactly match WORKRATE_ENV.");
   }
 
-  const bucketId = environmentVariables["DEFAULT_OBJECT_STORAGE_BUCKET_ID"]!.trim();
+  const bucketId = bucketValue!.trim();
   const privateRoot = parseRoot(
-    environmentVariables["PRIVATE_OBJECT_DIR"]!,
-    "PRIVATE_OBJECT_DIR",
+    privateRootValue!,
+    "WORKRATE_STORAGE_PRIVATE_ROOT",
   );
-  const publicRoots = environmentVariables["PUBLIC_OBJECT_SEARCH_PATHS"]!
+  const publicRoots = publicRootsValue!
     .split(",")
-    .map((value) => parseRoot(value.trim(), "PUBLIC_OBJECT_SEARCH_PATHS"));
+    .map((value) => parseRoot(value.trim(), "WORKRATE_STORAGE_PUBLIC_ROOTS"));
 
   for (const root of [privateRoot, ...publicRoots]) {
     if (root.bucketId !== bucketId) {
-      throw new Error("All storage roots must use DEFAULT_OBJECT_STORAGE_BUCKET_ID.");
+      throw new Error(
+        "All storage roots must use DEFAULT_OBJECT_STORAGE_BUCKET_ID or WORKRATE_STORAGE_BUCKET.",
+      );
     }
   }
 

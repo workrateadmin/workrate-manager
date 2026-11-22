@@ -130,6 +130,9 @@ export function assertRuntimeEnvironmentSafety(
   }
 
   const storageConfigured = Boolean(
+    environment["WORKRATE_STORAGE_BUCKET"] ||
+    environment["WORKRATE_STORAGE_PRIVATE_ROOT"] ||
+    environment["WORKRATE_STORAGE_PUBLIC_ROOTS"] ||
     environment["DEFAULT_OBJECT_STORAGE_BUCKET_ID"] ||
     environment["PRIVATE_OBJECT_DIR"] ||
     environment["PUBLIC_OBJECT_SEARCH_PATHS"],
@@ -143,12 +146,12 @@ export function assertRuntimeEnvironmentSafety(
 
   if (!isProductionEnvironment(workRateEnvironment)) {
     assertNonProductionStorageNamespace(
-      environment["PRIVATE_OBJECT_DIR"],
-      "PRIVATE_OBJECT_DIR",
+      environment["WORKRATE_STORAGE_PRIVATE_ROOT"] ?? environment["PRIVATE_OBJECT_DIR"],
+      "WORKRATE_STORAGE_PRIVATE_ROOT",
     );
     assertNonProductionStorageNamespace(
-      environment["PUBLIC_OBJECT_SEARCH_PATHS"],
-      "PUBLIC_OBJECT_SEARCH_PATHS",
+      environment["WORKRATE_STORAGE_PUBLIC_ROOTS"] ?? environment["PUBLIC_OBJECT_SEARCH_PATHS"],
+      "WORKRATE_STORAGE_PUBLIC_ROOTS",
     );
   }
   return workRateEnvironment;

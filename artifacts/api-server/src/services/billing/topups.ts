@@ -4,13 +4,10 @@ import { featureAccess, tenantEntitlements } from "./authorization";
 import { StripeApiClient } from "./stripeClient";
 import { isStripeBillingReady } from "./readiness";
 import { getWorkRateEnvironment } from "../../lib/runtime-environment";
+import { getWorkRatePublicUrl } from "../../lib/public-url";
 
 type StripeApi = Pick<StripeApiClient, "get" | "post">;
-const returnUrl = () => {
-  const host = process.env.REPLIT_DOMAINS?.split(",")[0];
-  if (!host) throw new Error("REPLIT_DOMAINS is required to create hosted billing sessions.");
-  return `https://${host}/settings/billing`;
-};
+const returnUrl = () => `${getWorkRatePublicUrl()}/settings/billing`;
 
 function unavailable(error: unknown) {
   if (error instanceof Error && /credential|required|not connected/i.test(error.message)) {

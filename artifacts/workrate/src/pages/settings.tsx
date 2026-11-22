@@ -1203,9 +1203,7 @@ function EmbedCodeCard() {
   // The snippet URL itself still points to this app's origin. If the user is
   // on the dev preview, the widget.js URL will be a dev URL which won't load
   // reliably on their live website — they should copy from the published app.
-  const isDevUrl =
-    typeof window !== "undefined" &&
-    window.location.hostname.endsWith(".replit.dev");
+  const isDevUrl = import.meta.env.DEV;
 
   const scriptSnippet =
 `<!-- WorkRate Chat Widget -->

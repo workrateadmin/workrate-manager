@@ -86,9 +86,7 @@ export default function WebsiteWidgetPage() {
   const widgetJsUrl = `${origin}${basePath}/widget.js`;
   const widgetPreviewUrl = `${origin}${basePath}/widget`;
   const businessId = company?.widgetToken ?? "loading...";
-  const isDevUrl =
-    typeof window !== "undefined" &&
-    window.location.hostname.endsWith(".replit.dev");
+  const isDevUrl = import.meta.env.DEV;
 
   const scriptSnippet =
     `<!-- WorkRate Chat Widget -->\n<script\n  src="${widgetJsUrl}"\n  data-business-id="${businessId}"\n  defer>\n</script>`;
