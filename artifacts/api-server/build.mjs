@@ -126,6 +126,22 @@ globalThis.require = __bannerCrReq(import.meta.url);
 globalThis.__filename = __bannerUrl.fileURLToPath(import.meta.url);
 globalThis.__dirname = __bannerPath.dirname(globalThis.__filename);
 process.stdout.write(JSON.stringify({ level: "info", event: "BOOT_STAGE_1", message: "entrypoint entered" }) + "\\n");
+
+process.on("uncaughtException", (err) => {
+  process.stderr.write(
+    "UNCAUGHT_EXCEPTION: " +
+      (err?.stack || err?.message || String(err)) +
+      "\\n",
+  );
+});
+
+process.on("unhandledRejection", (reason) => {
+  process.stderr.write(
+    "UNHANDLED_REJECTION: " +
+      (reason?.stack || reason?.message || String(reason)) +
+      "\\n",
+  );
+});
     `,
     },
   });
