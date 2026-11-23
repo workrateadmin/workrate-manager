@@ -17,6 +17,9 @@ export async function verifyConfiguredReleaseStorage(): Promise<ReleaseStorageVe
       const client = await pool.connect();
       try {
         return await readDatabaseEnvironmentMarker(client);
+      } catch (error) {
+        console.error("DATABASE_MARKER_READ_FAILED", error);
+        throw error;
       } finally {
         client.release();
       }
