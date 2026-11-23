@@ -99,4 +99,17 @@ app.use("/uploads", express.static(uploadsDir));
 
 app.use("/api", router);
 
+// Serve the built WorkRate frontend
+const frontendDir = path.resolve(
+  process.cwd(),
+  "../workrate/dist/public",
+);
+
+app.use(express.static(frontendDir));
+
+// SPA fallback - send index.html for frontend routes
+app.get("/{*splat}", (_req, res) => {
+  res.sendFile(path.join(frontendDir, "index.html"));
+});
+
 export default app;
