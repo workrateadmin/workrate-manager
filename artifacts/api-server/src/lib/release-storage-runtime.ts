@@ -14,14 +14,16 @@ export async function verifyConfiguredReleaseStorage(): Promise<ReleaseStorageVe
   latestVerification = await validateReleaseStorage({
     verifyBucket: assertConfiguredStorageBucketEnvironment,
     async readDatabaseMarker() {
-      const client = await pool.connect();
+      let client;
+
       try {
+        client = await pool.connect();
         return await readDatabaseEnvironmentMarker(client);
       } catch (error) {
-        console.error("DATABASE_MARKER_READ_FAILED", error);
+        console.error("DATABASE_CONNECTION_OR_MARKER_FAILED", error);
         throw error;
       } finally {
-        client.release();
+        client?.release();
       }
     },
   }, process.env, getEmbeddedApplicationSourceId());
