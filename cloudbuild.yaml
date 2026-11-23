@@ -4,8 +4,7 @@ steps:
       - build
       - europe-west1-docker.pkg.dev/$PROJECT_ID/cloud-run-source-deploy/workrate-manager/workrate-manager:$COMMIT_SHA
       - --builder=gcr.io/buildpacks/builder:latest
-    env:
-      - GOOGLE_ENTRYPOINT=pnpm --filter @workspace/api-server run start
+      - --env=GOOGLE_ENTRYPOINT=pnpm --filter @workspace/api-server run start
 
   - name: gcr.io/cloud-builders/docker
     args:
